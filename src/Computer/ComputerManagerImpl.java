@@ -16,11 +16,11 @@ public class ComputerManagerImpl implements ComputerManager {
 		list.add(new Computer(autoNumber++, "Asus", 2000, 4, "Zenbook", 12, 128));
 		list.add(new Computer(autoNumber++, "MSI", 1000, 6, "Gaming", 8, 256));
 		list.add(new Computer(autoNumber++, "AOG", 5000, 5, "Strix", 10, 128));
-		list.add(new Computer(autoNumber++, "Dell", 4000, 2, "Vostro", 6, 128));
-		list.add(new Computer(autoNumber++, "Lenovo", 3000, 6, "Thinkpad", 4, 512));
-		list.add(new Computer(autoNumber++, "Asus", 2000, 4, "Zenbook", 12, 128));
-		list.add(new Computer(autoNumber++, "MSI", 1000, 6, "Gaming", 8, 256));
-		list.add(new Computer(autoNumber++, "AOG", 5000, 5, "Strix", 10, 128));
+		list.add(new Computer(autoNumber++, "Dell", 6000, 1, "Vostro", 16, 128));
+		list.add(new Computer(autoNumber++, "Lenovo", 4000, 4, "Thinkpad", 8, 512));
+		list.add(new Computer(autoNumber++, "Asus", 8000, 5, "Zenbook", 4, 128));
+		list.add(new Computer(autoNumber++, "MSI", 3000, 7, "Gaming", 12, 256));
+		list.add(new Computer(autoNumber++, "Dell", 10000, 8, "Vostro", 8, 512));
 		return list;
 	}
 
