@@ -20,7 +20,7 @@ public class ComputerManagerImpl implements ComputerManager {
 		list.add(new Computer(autoNumber++, "Lenovo", 4000, 4, "Thinkpad", 8, 512));
 		list.add(new Computer(autoNumber++, "Asus", 8000, 5, "Zenbook", 4, 128));
 		list.add(new Computer(autoNumber++, "MSI", 3000, 7, "Gaming", 12, 256));
-		list.add(new Computer(autoNumber++, "AOG", 10000, 8, "Strix", 8, 512));
+		list.add(new Computer(autoNumber++, "Dell", 10000, 8, "Vostro", 8, 512));
 		return list;
 	}
 
