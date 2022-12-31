@@ -1,5 +1,6 @@
 package Housing;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -8,9 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import btl.Login;
+import btl.Statistic;
+import btl.WriteToFile;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,18 +44,21 @@ public class HousingGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private HousingManagerImpl manager = new HousingManagerImpl();
 	private List<Housing> list = new ArrayList<>();
+	private List<Statistic> listSt = new ArrayList<>();
 	private JPanel contentPane;
-	private JTable table;
+	private JTable table = new JTable();
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	DefaultTableModel model;
+	private DefaultTableModel model = new DefaultTableModel();
+	private DefaultTableModel model_1 = new DefaultTableModel();
 	private static int idSelect;
 	private JTextField textField_5;
 	private JTextField textField_6;
 	static HousingGUI frame;
+	private JTable tableStatistic = new JTable();
 
 	/**
 	 * Launch the application.
@@ -75,11 +82,12 @@ public class HousingGUI extends JFrame {
 	 */
 	@SuppressWarnings("unchecked")
 	public HousingGUI() throws Exception, ClassNotFoundException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("D:\\java_thuc_hanh\\logo.png"));
 		setTitle("Quản lý bđs");
 		manager.init();
 		list = WriteFile.listFile(manager.getList());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1030, 742);
+		setBounds(100, 100, 1129, 742);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -87,22 +95,13 @@ public class HousingGUI extends JFrame {
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 26, 984, 252);
+		scrollPane.setBounds(22, 26, 831, 252);
 		contentPane.add(scrollPane);
 
-		table = new JTable();
 		table.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "ID", "Name", "Price", "Total", "Area", "Location" }));
 		scrollPane.setViewportView(table);
 		model = (DefaultTableModel) table.getModel();
-
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = table.getSelectedRow();
-				idSelect = (int) table.getValueAt(row, 0);
-			}
-		});
 
 		JLabel lblName = new JLabel("Tên BĐS:");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -148,6 +147,8 @@ public class HousingGUI extends JFrame {
 				list.add(hs);
 				fillTable();
 				resetTextField();
+				JOptionPane.showMessageDialog(contentPane, "Thêm BĐS thành công", "Successful",
+						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		btnThem.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -166,10 +167,9 @@ public class HousingGUI extends JFrame {
 					resetTextField();
 					return;
 				}
-				for (Housing housing : list) {
-					if (housing.getProduct_id() == idSelect) {
-						editHousing(housing);
-						break;
+				for (int i = 0; i < list.size(); i++) {
+					if(list.get(i).getProduct_id() == idSelect) {
+						editHousing(list.get(i));
 					}
 				}
 				fillTable();
@@ -187,6 +187,8 @@ public class HousingGUI extends JFrame {
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).getProduct_id() == idSelect) {
 						list.remove(i);
+						JOptionPane.showMessageDialog(contentPane, "Xóa BĐS thành công", "Successful",
+								JOptionPane.PLAIN_MESSAGE);
 					}
 				}
 				fillTable();
@@ -229,7 +231,7 @@ public class HousingGUI extends JFrame {
 			}
 		});
 		btnShow.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnShow.setBounds(143, 584, 170, 38);
+		btnShow.setBounds(143, 565, 170, 38);
 		contentPane.add(btnShow);
 
 		JSeparator separator = new JSeparator();
@@ -238,7 +240,7 @@ public class HousingGUI extends JFrame {
 		contentPane.add(separator);
 
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(472, 485, 534, 2);
+		separator_1.setBounds(472, 485, 370, 2);
 		contentPane.add(separator_1);
 
 		JLabel lblNewLabel = new JLabel("Tìm kiếm theo:");
@@ -345,26 +347,54 @@ public class HousingGUI extends JFrame {
 		btnNewButton_1.setBounds(610, 613, 151, 38);
 		contentPane.add(btnNewButton_1);
 
-		JButton btnLogoutButton = new JButton("Đăng xuất");
-		btnLogoutButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(contentPane, "Bạn có chắc chắn đăng xuất không?", "Hỏi",
-						JOptionPane.YES_NO_OPTION);
-				JOptionPane.setRootFrame(null);
-				if (choice == JOptionPane.YES_OPTION) {
-					dispose();
-					Login obj = new Login();
-					obj = Login.getFrame();
-					obj.setVisible(true);
-					obj.setLocationRelativeTo(null);
-				}
-				return;
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setBounds(852, 293, 1, 385);
+		contentPane.add(separator_2);
 
+		JButton btnNewButton_2 = new JButton("Đăng Xuất");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login log = new Login();
+				log.setVisible(true);
+				log.setLocationRelativeTo(null);
+				dispose();
 			}
 		});
-		btnLogoutButton.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnLogoutButton.setBounds(864, 652, 142, 43);
-		contentPane.add(btnLogoutButton);
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnNewButton_2.setBounds(143, 625, 170, 36);
+		contentPane.add(btnNewButton_2);
+
+		JScrollPane scrollPane_1 = new JScrollPane(tableStatistic);
+		scrollPane_1.setBounds(877, 26, 228, 252);
+		contentPane.add(scrollPane_1);
+
+		tableStatistic.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Type", "Total" }));
+		scrollPane_1.setViewportView(tableStatistic);
+		model_1 = (DefaultTableModel) tableStatistic.getModel();
+
+		JButton btnNewButton_3 = new JButton("Thống kê");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillTableS();
+			}
+		});
+		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnNewButton_3.setBounds(936, 302, 123, 38);
+		contentPane.add(btnNewButton_3);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				idSelect = (int) table.getValueAt(row, 0);
+				textField.setText(String.valueOf(table.getValueAt(row, 1)));
+				textField_1.setText(String.valueOf(table.getValueAt(row, 2)));
+				textField_2.setText(String.valueOf(table.getValueAt(row, 3)));
+				textField_3.setText(String.valueOf(table.getValueAt(row, 4)));
+				textField_4.setText(String.valueOf(table.getValueAt(row, 5)));
+			}
+		});
 
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
@@ -372,6 +402,59 @@ public class HousingGUI extends JFrame {
 		int screenWidth = screenSize.width;
 
 		setLocation(screenWidth / 9, screenHeight / 32);
+	}
+
+	public int counT(String name) {
+		int count = 0;
+		for (Housing housing : list) {
+			if (housing.getLocation().equals(name)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public void fillTableS() {
+		List<Statistic> tmp = addStatic();
+		try {
+			WriteToFile.fileWrite(tmp, "Report.bin");
+			listSt = WriteToFile.fileRead("Report.bin");
+			viewTableS(listSt);
+		} catch (IOException | ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		tableStatistic.setRowHeight(40);
+
+		DefaultTableCellRenderer rightRendererS = new DefaultTableCellRenderer();
+		rightRendererS.setHorizontalAlignment(SwingConstants.CENTER);
+
+		for (int columnIndex = 0; columnIndex < model_1.getColumnCount(); columnIndex++) {
+			tableStatistic.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRendererS);
+		}
+	}
+
+	public void viewTableS(List<Statistic> list) {
+		model_1.setRowCount(0);
+		for (Statistic sts : listSt) {
+			model_1.addRow(new Object[] { sts.getType(), sts.getSumTotal() });
+			;
+		}
+	}
+
+	public List<Statistic> addStatic() {
+		List<Statistic> lst = new ArrayList<>();
+
+		lst.add(new Statistic("Hà Nội", counT("Hà Nội")));
+		lst.add(new Statistic("Bình Dương", counT("Bình Dương")));
+		lst.add(new Statistic("Nam Định", counT("Nam Định")));
+		lst.add(new Statistic("Hạ Long", counT("Hạ Long")));
+		lst.add(new Statistic("Hà Đông", counT("Hà Đông")));
+		lst.add(new Statistic("Gia Lâm", counT("Gia Lâm")));
+		lst.add(new Statistic("Hải Phòng", counT("Hải Phòng")));
+
+		return lst;
 	}
 
 	public void checkStringInput(String str) {
@@ -416,6 +499,15 @@ public class HousingGUI extends JFrame {
 			model.addRow(new Object[] { housing.getProduct_id(), housing.getProduct_name(), housing.getProduct_price(),
 					housing.getProduct_total(), housing.getArea(), housing.getLocation() });
 		}
+
+		table.setRowHeight(20);
+
+		DefaultTableCellRenderer rightRendererS = new DefaultTableCellRenderer();
+		rightRendererS.setHorizontalAlignment(SwingConstants.CENTER);
+
+		for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
+			table.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRendererS);
+		}
 	}
 
 	public boolean checkValue() {
@@ -456,7 +548,6 @@ public class HousingGUI extends JFrame {
 	}
 
 	public Housing editHousing(Housing hs) {
-//		Housing hs = new Housing();
 		if (!textField.getText().equals(""))
 			hs.setProduct_name(textField.getText());
 		if (!textField_1.getText().equals(""))

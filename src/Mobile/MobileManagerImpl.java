@@ -11,10 +11,10 @@ public class MobileManagerImpl implements MobileManager {
 	static Scanner sc = new Scanner(System.in);
 
 	public List<Mobile> Danhsach() {
-		list.add(new Mobile(id++, "Iphone", 10, 3, "11 Pro Max", 3325, "Apple"));
-		list.add(new Mobile(id++, "Iphone", 15, 6, "12 Pro Max", 4324, "Apple"));
-		list.add(new Mobile(id++, "Oppo", 6, 2, "Neo 3", 1456, "BBK electroics"));
-		list.add(new Mobile(id++, "Samsung", 7, 4, "Note 8", 2476, "Samsung"));
+		list.add(new Mobile(id++, "Iphone", 10, 3, "11 Pro Max", "Apple"));
+		list.add(new Mobile(id++, "Iphone", 15, 6, "12 Pro Max", "Apple"));
+		list.add(new Mobile(id++, "Oppo", 6, 2, "Neo 3", "BBK electroics"));
+		list.add(new Mobile(id++, "Samsung", 7, 4, "Note 8", "Samsung"));
 		return list;
 	}
 
@@ -91,18 +91,6 @@ public class MobileManagerImpl implements MobileManager {
 				search.add(Mobile);
 			}
 		}
-		return search;
-	}
-	
-	@Override
-	public List<Mobile> searchMobileNumberphone(double numberphone) {
-		List<Mobile> search = new ArrayList<>();
-		for (Mobile i : list) {
-			if (i.getMobile_numberphone() == numberphone) {
-				search.add(i);
-			}
-		}
-		// TODO Auto-generated method stub
 		return search;
 	}
 

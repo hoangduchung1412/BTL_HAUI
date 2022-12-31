@@ -12,9 +12,15 @@ public class HousingManagerImpl implements HousingManager {
 	public List<Housing> init() {
 		list.add(new Housing(autoNumber++, "Chung cư mini", 100000, 5, 20, "Hà Đông"));
 		list.add(new Housing(autoNumber++, "Chung cư", 90000, 6, 40, "Hà Nội"));
-		list.add(new Housing(autoNumber++, "Chung cư cao cấp", 24000, 4, 45, "Mỹ Đình"));
-		list.add(new Housing(autoNumber++, "Nhà view Hồ Tây", 5000000, 6, 35, "Nhổn"));
+		list.add(new Housing(autoNumber++, "Chung cư cao cấp", 24000, 4, 45, "Hà Nội"));
+		list.add(new Housing(autoNumber++, "Nhà view Hồ Tây", 5000000, 6, 35, "Hà Nội"));
 		list.add(new Housing(autoNumber++, "VinHome", 4000000, 5, 20, "Gia Lâm"));
+		list.add(new Housing(autoNumber++, "Villa", 100000, 5, 80, "Hạ Long"));
+		list.add(new Housing(autoNumber++, "Nhà mặt đường", 600000, 5, 50, "Bình Dương"));
+		list.add(new Housing(autoNumber++, "Chung cư", 100000, 5, 20, "Hà Nam"));
+		list.add(new Housing(autoNumber++, "Chung cư cao cấp", 200000, 5, 20, "Vĩnh Ngọc"));
+		list.add(new Housing(autoNumber++, "Chung cư", 100000, 5, 20, "Đông Hội"));
+		list.add(new Housing(autoNumber++, "Resort", 100000, 5, 20, "Hải Phòng"));
 		return list;
 	}
 
@@ -182,5 +188,4 @@ class sortedByPrice implements Comparator<Housing> {
 		Double price2 = o2.getProduct_price();
 		return (int) (price1 - price2);
 	}
-
 }

@@ -10,7 +10,6 @@ public interface MobileManager {
 	public List<Mobile> searchMobile(String name);
 	public List<Mobile> searchMobile(double price);
 	public List<Mobile> searchMobileName(String name);
-	public List<Mobile> searchMobileNumberphone(double numberphone);
 	public List<Mobile> searchMobileCompany(String company);
 		
 	public List<Mobile> sortedMobile(double price);

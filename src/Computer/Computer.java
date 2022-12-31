@@ -58,7 +58,8 @@ public class Computer extends Product {
 
 	@Override
 	public String toString() {
-		return "Computer [" + super.toString() + " - type=" + type + ", ram=" + ram + ", ssd=" + ssd + "]\n";
+//		return "Computer [" + super.toString() + " - type=" + type + ", ram=" + ram + ", ssd=" + ssd + "]\n";
+		return super.toString() + String.format(" %-10s | %-5d | %-10d", type, ram, ssd);
 	}
 
 	public void input(){

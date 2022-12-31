@@ -47,7 +47,8 @@ public class Housing extends Product {
 
 	@Override
 	public String toString() {
-		return super.toString() + "area = " + area + "m², location = " + location +"\n";
+//		return super.toString() + "area = " + area + "m², location = " + location +"\n";
+		return super.toString() + String.format(" %9.2f | %-25s ", area, location);
 	}
 
 	@Override
@@ -58,5 +59,4 @@ public class Housing extends Product {
 		System.out.print("\tNhập vị trí: ");
 		setLocation(sc.nextLine());
 	}
-	
 }

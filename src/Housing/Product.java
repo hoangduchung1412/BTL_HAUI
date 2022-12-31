@@ -62,8 +62,9 @@ public class Product implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "product_id = " + product_id + ", product_name = " + product_name + ", product_price = " 
-				+ product_price + "$, product_total = " + product_total + ", ";
+//		return "product_id = " + product_id + ", product_name = " + product_name + ", product_price = " 
+//				+ product_price + "$, product_total = " + product_total + ", ";
+		return String.format("%-5d | %-25s | %15.3f | %8d |", product_id, product_name, product_price, product_total);
 	}
 	
 	public void input() {
@@ -74,5 +75,4 @@ public class Product implements Serializable{
 	    System.out.print("\tNhập số lượng: ");
 	    setProduct_total(Integer.parseInt(sc.nextLine()));
 	  }
-
 }

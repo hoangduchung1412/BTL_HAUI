@@ -8,9 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import javax.swing.JTextArea;
+import btl.Login;
+import btl.Statistic;
+import btl.WriteToFile;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -28,7 +32,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import java.awt.Color;
@@ -38,17 +51,20 @@ public class ComputerGUI extends JFrame {
 	private ComputerManagerImpl manager = new ComputerManagerImpl();
 	private List<Computer> list = new ArrayList<>();
 	private JPanel contentPane;
-	private JTable table;
+	private JTable table = new JTable();
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	DefaultTableModel model;
+	private DefaultTableModel model = new DefaultTableModel();
+	private DefaultTableModel model_1 = new DefaultTableModel();
 	private static int idSelect;
 	private JTextField textField_5;
 	private JTextField textField_6;
 	private JTextField textField_7;
+	private List<Statistic> listSt = new ArrayList<>();
+	private JTable tableStatistic = new JTable();
 
 	/**
 	 * Launch the application.
@@ -74,7 +90,7 @@ public class ComputerGUI extends JFrame {
 		manager.init();
 		list = WriteFile.listFile(manager.getList());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1030, 742);
+		setBounds(100, 100, 1296, 742);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -244,7 +260,7 @@ public class ComputerGUI extends JFrame {
 			}
 		});
 		btnShow.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnShow.setBounds(119, 503, 170, 38);
+		btnShow.setBounds(119, 449, 170, 38);
 		contentPane.add(btnShow);
 
 		JSeparator separator = new JSeparator();
@@ -368,7 +384,49 @@ public class ComputerGUI extends JFrame {
 		comboBox_2.setBounds(648, 550, 191, 24);
 		contentPane.add(comboBox_2);
 		
+		JButton btnNewButton_2 = new JButton("Đăng Xuất");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login log = new Login();
+				log.setVisible(true);
+				log.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnNewButton_2.setBounds(119, 595, 170, 36);
+		contentPane.add(btnNewButton_2);
 		
+		JScrollPane scrollPane_1 = new JScrollPane(tableStatistic);
+		scrollPane_1.setBounds(1024, 11, 228, 252);
+		contentPane.add(scrollPane_1);
+
+		tableStatistic.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Type", "Total" }));
+		scrollPane_1.setViewportView(tableStatistic);
+		model_1 = (DefaultTableModel) tableStatistic.getModel();
+
+		JButton btnNewButton_3 = new JButton("Thống kê");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillTableS();
+			}
+		});
+		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnNewButton_3.setBounds(1084, 295, 123, 38);
+		contentPane.add(btnNewButton_3);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				idSelect = (int) table.getValueAt(row, 0);
+				textField.setText(String.valueOf(table.getValueAt(row, 1)));
+				textField_1.setText(String.valueOf(table.getValueAt(row, 2)));
+				textField_2.setText(String.valueOf(table.getValueAt(row, 3)));
+				textField_3.setText(String.valueOf(table.getValueAt(row, 4)));
+				textField_4.setText(String.valueOf(table.getValueAt(row, 5)));
+			}
+		});
 		
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
@@ -479,4 +537,56 @@ public class ComputerGUI extends JFrame {
 			cp.setSsd(Integer.valueOf(textField_7.getText()));
 		return cp;
 	}
+	
+	public int counT(String name) {
+		int count = 0;
+		for (Computer computer : list) {
+			if (computer.getType().equals(name)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public void fillTableS() {
+		List<Statistic> tmp = addStatic();
+		try {
+			WriteToFile.fileWrite(tmp, "Report.bin");
+			listSt = WriteToFile.fileRead("Report.bin");
+			viewTableS(listSt);
+		} catch (IOException | ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		tableStatistic.setRowHeight(40);
+
+		DefaultTableCellRenderer rightRendererS = new DefaultTableCellRenderer();
+		rightRendererS.setHorizontalAlignment(SwingConstants.CENTER);
+
+		for (int columnIndex = 0; columnIndex < model_1.getColumnCount(); columnIndex++) {
+			tableStatistic.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRendererS);
+		}
+	}
+
+	public void viewTableS(List<Statistic> list) {
+		model_1.setRowCount(0);
+		for (Statistic sts : listSt) {
+			model_1.addRow(new Object[] { sts.getType(), sts.getSumTotal() });
+			;
+		}
+	}
+
+	public List<Statistic> addStatic() {
+		List<Statistic> lst = new ArrayList<>();
+
+		lst.add(new Statistic("Vostro", counT("Vostro")));
+		lst.add(new Statistic("Thinkpad", counT("Thinkpad")));
+		lst.add(new Statistic("Zenbook", counT("Zenbook")));
+		lst.add(new Statistic("Gaming", counT("Gaming")));
+		lst.add(new Statistic("Strix", counT("Strix")));
+
+		return lst;
+	}
+
 }

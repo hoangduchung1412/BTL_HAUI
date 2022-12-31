@@ -1,7 +1,9 @@
 eclipse.preferences.version=1
 encoding//src/Computer=UTF-8
+encoding//src/Housing/Housing.java=UTF-8
 encoding//src/Housing/HousingGUI.java=UTF-8
 encoding//src/Housing/HousingManagerImpl.java=UTF-8
+encoding//src/Housing/Product.java=UTF-8
 encoding//src/Mobile=UTF-8
 encoding//src/btl/Login.java=UTF-8
 encoding//src/btl/Menu.java=UTF-8

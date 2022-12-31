@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import Mobile.Mobile;
+import btl.Login;
 
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
@@ -30,7 +31,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import java.awt.Color;
@@ -45,7 +55,6 @@ public class MobileGUI extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-	private JTextField textField_4;
 	DefaultTableModel model;
 	private static int idSelect;
 	private JTextField textField_5;
@@ -90,7 +99,7 @@ public class MobileGUI extends JFrame {
 
 		table = new JTable();
 		table.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "ID", "Tên Hãng", "Price", "Total", "Tên Mobile", "PhoneNumber", "Company" }));
+				new String[] { "ID", "Tên Hãng", "Price", "Total", "Tên Mobile", "Company" }));
 		scrollPane.setViewportView(table);
 		model = (DefaultTableModel) table.getModel();
 
@@ -125,17 +134,11 @@ public class MobileGUI extends JFrame {
 		lblType.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblType.setBounds(10, 199, 104, 25);
 		contentPane.add(lblType);
-
-		JLabel lblRam = new JLabel("PhoneNumber:");
-		lblRam.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblRam.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblRam.setBounds(10, 246, 104, 25);
-		contentPane.add(lblRam);
 		
 		JLabel lblSsd = new JLabel("Company:");
 		lblSsd.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSsd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSsd.setBounds(9, 295, 106, 22);
+		lblSsd.setBounds(9, 247, 106, 22);
 		contentPane.add(lblSsd);
 
 		JButton btnThem = new JButton("Thêm");
@@ -147,7 +150,7 @@ public class MobileGUI extends JFrame {
 				}
 				Mobile m = new Mobile(manager.id++, textField.getText(),
 						Double.parseDouble(textField_1.getText()), Integer.parseInt(textField_2.getText()),
-						textField_3.getText(), Integer.parseInt(textField_4.getText()), textField_7.getText());
+						textField_3.getText(), textField_7.getText());
 				if (!checkExist(m, list))
 					return;
 				list.add(m);
@@ -226,16 +229,10 @@ public class MobileGUI extends JFrame {
 		textField_3.setColumns(10);
 		textField_3.setBounds(131, 201, 184, 25);
 		contentPane.add(textField_3);
-
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_4.setColumns(10);
-		textField_4.setBounds(131, 248, 184, 25);
-		contentPane.add(textField_4);
 		
 		textField_7 = new JTextField();
 		textField_7.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_7.setBounds(131, 292, 184, 25);
+		textField_7.setBounds(130, 246, 184, 25);
 		contentPane.add(textField_7);
 		textField_7.setColumns(10);
 		contentPane.add(textField_7);
@@ -247,7 +244,7 @@ public class MobileGUI extends JFrame {
 			}
 		});
 		btnShow.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnShow.setBounds(119, 503, 170, 38);
+		btnShow.setBounds(119, 440, 170, 38);
 		contentPane.add(btnShow);
 
 		JSeparator separator = new JSeparator();
@@ -274,7 +271,7 @@ public class MobileGUI extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBox.setModel(
-				new DefaultComboBoxModel(new String[] { "Tên Hãng", "Price", "Tên Mobile", "PhoneNumber", "Company" }));
+				new DefaultComboBoxModel(new String[] { "Tên Hãng", "Price", "Tên Mobile", "Company" }));
 		comboBox.setBounds(648, 399, 191, 26);
 		contentPane.add(comboBox);
 
@@ -300,10 +297,7 @@ public class MobileGUI extends JFrame {
 				} else if (valueSearch.trim().toLowerCase().equals(comboBox.getItemAt(2).toString().toLowerCase())) {
 					listSearch = manager.searchMobileName(typeSearch);
 					viewTable(listSearch);
-				} else if (valueSearch.trim().toLowerCase().equals(comboBox.getItemAt(3).toString().toLowerCase())) {
-					listSearch = manager.searchMobileNumberphone(Double.parseDouble(typeSearch));
-					viewTable(listSearch);
-				} else if (valueSearch.trim().toLowerCase().equals(comboBox.getItemAt(4).toString().toLowerCase())) {
+				}  else if (valueSearch.trim().toLowerCase().equals(comboBox.getItemAt(4).toString().toLowerCase())) {
 					listSearch = manager.searchMobileCompany(typeSearch);
 					viewTable(listSearch);
 				}
@@ -377,6 +371,19 @@ public class MobileGUI extends JFrame {
 		comboBox_2.setBounds(648, 550, 191, 24);
 		contentPane.add(comboBox_2);
 		
+		JButton btnNewButton_2 = new JButton("Đăng Xuất");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login log = new Login();
+				log.setVisible(true);
+				log.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnNewButton_2.setBounds(119, 624, 170, 36);
+		contentPane.add(btnNewButton_2);
+		
 		
 		
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -410,7 +417,6 @@ public class MobileGUI extends JFrame {
 		textField_1.setText("");
 		textField_2.setText("");
 		textField_3.setText("");
-		textField_4.setText("");
 		textField_7.setText("");
 	}
 
@@ -428,7 +434,7 @@ public class MobileGUI extends JFrame {
 		model.setRowCount(0);
 		for(Mobile mobile : list) {
 			model.addRow(new Object[] { mobile.getProduct_id(), mobile.getProduct_name(), mobile.getProduct_price(),
-					mobile.getProduct_total(), mobile.getMobile_name(), mobile.getMobile_numberphone(), mobile.getMobile_company() });
+					mobile.getProduct_total(), mobile.getMobile_name(), mobile.getMobile_company() });
 		}
 	}
 
@@ -439,8 +445,6 @@ public class MobileGUI extends JFrame {
 		if (Double.parseDouble(textField_1.getText()) < 0)
 			strb.append("!\n");
 		if (Integer.parseInt(textField_2.getText()) < 0)
-			strb.append("!\n");
-		if (Integer.parseInt(textField_4.getText()) < 0)
 			strb.append("!\n");
 		if (strb.length() > 0) {
 			JOptionPane.showMessageDialog(contentPane, strb.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -459,8 +463,6 @@ public class MobileGUI extends JFrame {
 			strb.append("Số lượng điện thoại không được để trống!\n");
 		if (textField_3.getText().equals(""))
 			strb.append("Tên điện thoại không được để trống!\n");
-		if (textField_4.getText().equals(""))
-			strb.append("Số điện thoại không được để trống!\n");
 		if (textField_7.getText().equals(""))
 			strb.append("Công ty điện thoại không được để trống!\n");
 		if (strb.length() > 0) {
@@ -480,10 +482,9 @@ public class MobileGUI extends JFrame {
 			m.setProduct_total(Integer.valueOf(textField_2.getText()));
 		if (!textField_3.getText().equals(""))
 			m.setMobile_name(textField_3.getText());
-		if (!textField_4.getText().equals(""))
-			m.setMobile_numberphone(Double.valueOf(textField_4.getText()));
 		if (!textField_7.getText().equals(""))
 			m.setMobile_company(textField_7.getText());
 		return m;
 	}
+	
 }
